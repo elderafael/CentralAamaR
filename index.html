@@ -1,3 +1,5 @@
+<!--Here is the modified HTML file. The people list is now protected by a password modal, requiring the user to enter "Central@2027" and click "Visualizar Lista" to reveal it.
+```html-->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -65,6 +67,41 @@ input[type=search]::placeholder{color:#8b98a9}
 .person:hover .card-arrow{background:var(--navy2);color:white;transform:translateX(2px)}
 .empty{display:none;text-align:center;background:white;border:1px dashed #cbd5e1;border-radius:18px;padding:44px 20px;color:var(--muted)}
 .footer{max-width:1180px;margin:auto;padding:0 20px 30px;text-align:center;color:#8492a4;font-size:.8rem}
+
+/* Locked state */
+.lock-area{display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:60px 20px;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 12px 40px #0a244010;text-align:center}
+.lock-area.visible{display:flex}
+.lock-icon{width:64px;height:64px;display:grid;place-items:center;border-radius:50%;background:#eef3f8;color:var(--navy2)}
+.lock-icon svg{width:32px;height:32px}
+.lock-title{margin:0;font-size:1.25rem;font-weight:850;letter-spacing:-.03em;color:var(--navy2)}
+.lock-text{margin:0;max-width:420px;color:var(--muted);font-size:.92rem}
+.lock-area .btn-primary{padding:14px 24px;font-size:.95rem}
+
+/* Password modal */
+.pw-backdrop{position:fixed;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center;padding:20px;visibility:hidden;opacity:0;background:#06111fdd;backdrop-filter:blur(8px);transition:opacity .3s var(--ease),visibility .3s}
+.pw-backdrop.open{visibility:visible;opacity:1}
+.pw-modal{width:100%;max-width:420px;background:radial-gradient(ellipse at 70% 0%,#143c5a 0%,transparent 55%),linear-gradient(135deg,#0b2039,#0d2b43);border:1px solid #ffffff20;border-radius:22px;padding:28px;color:#fff;box-shadow:0 30px 80px #0008;transform:translateY(10px) scale(.98);opacity:0;transition:transform .35s var(--ease),opacity .3s var(--ease)}
+.pw-backdrop.open .pw-modal{transform:translateY(0) scale(1);opacity:1}
+.pw-header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:8px}
+.pw-title{margin:0;font-size:1.2rem;font-weight:850;letter-spacing:-.03em}
+.pw-close{display:grid;place-items:center;width:38px;height:38px;flex:0 0 38px;border:1px solid #ffffff24;border-radius:50%;background:#ffffff0b;color:#fff;font-size:1.3rem;line-height:1;transition:background .2s,transform .2s}
+.pw-close:hover{background:#ffffff20;transform:rotate(90deg)}
+.pw-desc{margin:0 0 20px;color:#b9cadb;font-size:.9rem}
+.pw-label{display:block;margin-bottom:7px;color:#9eb5c9;font-size:.72rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+.pw-input{width:100%;padding:13px 15px;border:1px solid #ffffff2a;border-radius:12px;background:#ffffff0d;color:#fff;font-size:.98rem;outline:none;transition:border-color .2s,background .2s}
+.pw-input:focus{border-color:var(--cyan);background:#ffffff14}
+.pw-input::placeholder{color:#7f97ad}
+.pw-error{display:none;align-items:center;gap:8px;margin:14px 0 0;padding:11px 13px;border-radius:11px;background:#c0392b26;border:1px solid #e74c3c55;color:#ffb4ab;font-size:.86rem;font-weight:650}
+.pw-error.visible{display:flex}
+.pw-error svg{width:17px;height:17px;flex:0 0 17px}
+.pw-actions{display:flex;gap:10px;margin-top:20px}
+.pw-actions .btn{flex:1;padding:13px 16px;border-radius:12px}
+.pw-cancel{background:#ffffff12;color:#e2ecf5;border:1px solid #ffffff1f}
+.pw-cancel:hover{background:#ffffff1f}
+.pw-submit{background:var(--cyan);color:#06283b;font-weight:850}
+.pw-submit:hover{background:#83e0db}
+.pw-submit:disabled{opacity:.55;cursor:wait;transform:none}
+
 /* Full-screen presentation modal */
 .modal-backdrop{position:fixed;inset:0;z-index:1000;display:flex;visibility:hidden;opacity:0;background:#06111ff5;backdrop-filter:blur(16px);transition:opacity .38s var(--ease),visibility .38s;}
 .modal-backdrop.open{visibility:visible;opacity:1}
@@ -129,9 +166,10 @@ input[type=search]::placeholder{color:#8b98a9}
  .photo-wrap{width:78px;height:84px}
  .name{font-size:1rem}.role{font-size:.82rem;gap:6px}.role:before{width:12px;flex-basis:12px}
  .card-arrow{width:25px;height:25px}
+ .pw-modal{padding:22px}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
-@media print{body{background:white}.site-header{background:#102b4e!important;padding:22px;-webkit-print-color-adjust:exact;print-color-adjust:exact}.hero{padding-top:20px}main{margin:0 auto;padding:18px}.toolbar,.modal-backdrop,.card-arrow{display:none!important}.person{box-shadow:none;break-inside:avoid;border-color:#ddd;animation:none}.footer{display:none}}
+@media print{body{background:white}.site-header{background:#102b4e!important;padding:22px;-webkit-print-color-adjust:exact;print-color-adjust:exact}.hero{padding-top:20px}main{margin:0 auto;padding:18px}.toolbar,.modal-backdrop,.card-arrow,.pw-backdrop,.lock-area{display:none!important}.person{box-shadow:none;break-inside:avoid;border-color:#ddd;animation:none}.footer{display:none}}
 </style>
 </head>
 <body>
@@ -157,19 +195,55 @@ input[type=search]::placeholder{color:#8b98a9}
  </div>
 </header>
 <main>
- <section class="toolbar" aria-label="Ferramentas da lista">
-  <label class="search-wrap">
-   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5" stroke-linecap="round"/></svg>
-   <input id="search" type="search" placeholder="Buscar por nome ou ministério..." aria-label="Buscar por nome ou cargo">
-  </label>
-  <div class="actions"><button class="btn btn-secondary" id="clear" type="button">Limpar busca</button><button class="btn btn-primary" id="print" type="button">Imprimir lista ↗</button></div>
+ <!-- Locked area shown until password is validated -->
+ <section class="lock-area visible" id="lockArea">
+  <div class="lock-icon" aria-hidden="true">
+   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10.5" width="16" height="10.5" rx="2.5"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5" stroke-linecap="round"/></svg>
+  </div>
+  <h2 class="lock-title">Lista protegida</h2>
+  <p class="lock-text">Esta lista contém informações da equipe. Para visualizá-la, clique no botão abaixo e informe a senha de acesso.</p>
+  <button class="btn btn-primary" id="openPassword" type="button">Visualizar Lista</button>
  </section>
- <div class="summary"><span class="summary-label">Equipe em ordem da leitura da ata</span><span class="count" id="count">31 pessoas</span></div>
- <section class="people" id="people" aria-label="Pessoas e cargos"></section>
- <div class="empty" id="empty">Nenhuma pessoa encontrada. Tente outro nome ou ministério.</div>
+
+ <div id="listContent" hidden>
+  <section class="toolbar" aria-label="Ferramentas da lista">
+   <label class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5" stroke-linecap="round"/></svg>
+    <input id="search" type="search" placeholder="Buscar por nome ou ministério..." aria-label="Buscar por nome ou cargo">
+   </label>
+   <div class="actions"><button class="btn btn-secondary" id="clear" type="button">Limpar busca</button><button class="btn btn-primary" id="print" type="button">Imprimir lista ↗</button></div>
+  </section>
+  <div class="summary"><span class="summary-label">Equipe em ordem da leitura da ata</span><span class="count" id="count">31 pessoas</span></div>
+  <section class="people" id="people" aria-label="Pessoas e cargos"></section>
+  <div class="empty" id="empty">Nenhuma pessoa encontrada. Tente outro nome ou ministério.</div>
+ </div>
 </main>
 <footer class="footer">Central AamaR · Igreja Adventista do Sétimo Dia</footer>
 
+<!-- Password modal -->
+<div class="pw-backdrop" id="pwBackdrop" role="dialog" aria-modal="true" aria-labelledby="pwTitle" aria-hidden="true">
+ <div class="pw-modal">
+  <div class="pw-header">
+   <h2 class="pw-title" id="pwTitle">Acesso restrito</h2>
+   <button class="pw-close" id="pwClose" type="button" aria-label="Fechar">×</button>
+  </div>
+  <p class="pw-desc">Informe a senha para visualizar a lista da equipe.</p>
+  <form id="pwForm" novalidate>
+   <label class="pw-label" for="pwInput">Senha de acesso</label>
+   <input class="pw-input" id="pwInput" type="password" placeholder="Digite a senha" autocomplete="off" required>
+   <div class="pw-error" id="pwError" role="alert">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5" stroke-linecap="round"/><circle cx="12" cy="16.5" r=".9" fill="currentColor" stroke="none"/></svg>
+    <span>Senha incorreta. Tente novamente.</span>
+   </div>
+   <div class="pw-actions">
+    <button class="btn pw-cancel" id="pwCancel" type="button">Cancelar</button>
+    <button class="btn pw-submit" id="pwSubmit" type="submit">Entrar</button>
+   </div>
+  </form>
+ </div>
+</div>
+
+<!-- Full-screen presentation modal -->
 <div class="modal-backdrop" id="personModal" role="dialog" aria-modal="true" aria-labelledby="modalName" aria-hidden="true">
  <div class="modal">
   <div class="modal-topbar">
@@ -199,12 +273,79 @@ input[type=search]::placeholder{color:#8b98a9}
 </div>
 <script>
 const people = [{"seq": 1, "name": "Luiz Carlos Silva Feijão", "role": "Anciao", "image": "assets/01-1-Luiz Carlos Silva Feijão-1Anciao.jpeg"}, {"seq": 2, "name": "Adjuto Pereira da Cunha", "role": "Anciao", "image": "assets/02-2-Adjuto Pereira da Cunha-Anciao.jpeg"}, {"seq": 3, "name": "Adriano Tancredo Marinho dos Santos", "role": "Anciao", "image": "assets/03-3-Adriano Tancredo Marinho dos Santos-Anciao.jpeg"}, {"seq": 4, "name": "Antônio Genival Limeira de Souza", "role": "Anciao", "image": "assets/04-4-Antônio Genival Limeira de Souza-Anciao.jpeg"}, {"seq": 5, "name": "Francisco José Justa Barroso", "role": "Anciao", "image": "assets/05-5-Francisco José Justa Barroso-Anciao.jpeg"}, {"seq": 6, "name": "Igor Farias Alves", "role": "Anciao", "image": "assets/06-6-Igor Farias Alves-Anciao.jpeg"}, {"seq": 7, "name": "José Aparecido de Souza Lima", "role": "Anciao", "image": "assets/07-7-José Aparecido de Souza Lima-Anciao.jpeg"}, {"seq": 8, "name": "José Rudy Gonzaga de Oliveira", "role": "Anciao", "image": "assets/08-8-José Rudy Gonzaga de Oliveira-Anciao.jpeg"}, {"seq": 9, "name": "Rangel Ramos Ferreira", "role": "Anciao", "image": "assets/09-9-Rangel Ramos Ferreira-Anciao.jpeg"}, {"seq": 10, "name": "Robson Ramos Ferreira", "role": "Anciao", "image": "assets/10-10-Robson Ramos Ferreira-Anciao.jpeg"}, {"seq": 11, "name": "Marília Guido Cavalcante Alves", "role": "Secretaria", "image": "assets/11-11-Marília Guido Cavalcante Alves-Secretaria.jpeg"}, {"seq": 12, "name": "Gilson Carlos Fonseca da Silva", "role": "Tesoureiro", "image": "assets/12-12-Gilson Carlos Fonseca da Silva-Tesoureiro.jpeg"}, {"seq": 13, "name": "Eliezer da Silva Pantoja", "role": "Ministerio Pessoal", "image": "assets/13-13-Eliezer da Silva Pantoja-Ministerio Pessoal.jpeg"}, {"seq": 14, "name": "Ordileia Colacio da Silva Feijão", "role": "Escola Sabatina", "image": "assets/14-14-Ordileia Colacio da Silva Feijão-Escola Sabatina.jpeg"}, {"seq": 15, "name": "Rubem Ramos Gonçalves", "role": "Diretor Chefe de Diáconos", "image": "assets/15-15-Rubem Ramos Gonçalves-Diretor Chefe de Diáconos.jpeg"}, {"seq": 16, "name": "Junilda Arruda de Lima", "role": "Diretora Chefe de Diaconisas", "image": "assets/16-16-Junilda Arruda de Lima-Diretora Chefe de Diaconisas.jpeg"}, {"seq": 17, "name": "Felipe Matos da Silva", "role": "Ação Solidária Adventista - ASA e Ministério da Saúde", "image": "assets/17-17-Felipe Matos da Silva-Ação Solidária Adventista - ASA e Ministério da Saúde.jpeg"}, {"seq": 18, "name": "Jane Cley Vieira de Paula", "role": "Ministerio Adventista das Possibilidades", "image": "assets/18-18-Jane Cley Vieira de Paula-Ministerio Adventista das Possibilidades.jpeg"}, {"seq": 19, "name": "Airton Silva de Souza", "role": "Ministério Jovem", "image": "assets/19-19-Airton Silva de Souza-Ministério Jovem.jpeg"}, {"seq": 20, "name": "Mateus Ordones Santos", "role": "Desbravadores e Sonoplastia", "image": "assets/20-20-Mateus Ordones Santos-Desbravadores e Sonoplastia.jpeg"}, {"seq": 21, "name": "Pammela Castro Barroso", "role": "Universitários", "image": "assets/21-21-Pammela Castro Barroso-Universitários.jpeg"}, {"seq": 22, "name": "Maria dos Anjos Pereira da Cunha", "role": "Ministério da Criança(1)", "image": "assets/22-22-Maria dos Anjos Pereira da Cunha-Ministério da Criança(1).jpeg"}, {"seq": 23, "name": "Ivaney Lopes Leite", "role": "Ministério da Música", "image": "assets/23-23-Ivaney Lopes Leite-Ministério da Música.jpeg"}, {"seq": 24, "name": "Elder Rafael Gusmao de Souza", "role": "Comunicação", "image": "assets/24-24-Elder Rafael Gusmao de Souza-Comunicação.jpeg"}, {"seq": 25, "name": "Ligione Pereira Antunes Ferreira e Robson Ramos Ferreira", "role": "Ministério Lar e Família", "image": "assets/25-25-Ligione Pereira Antunes Ferreira e Robson Ramos Ferreira-Ministério Lar e Família.jpeg"}, {"seq": 26, "name": "Márcia Maria Amaral de Vasconcelos", "role": "Mordomia", "image": "assets/26-26-Márcia Maria Amaral de Vasconcelos-Mordomia.jpeg"}, {"seq": 27, "name": "Juanita Cavalcante Zevalhos de Almeida", "role": "Ministério da Mulher", "image": "assets/27-27-Juanita Cavalcante Zevalhos de Almeida-Ministério da Mulher.jpeg"}, {"seq": 28, "name": "Francisco Bruno Pereira Santos", "role": "Ministério de Publicações e Espírito de Profecia", "image": "assets/28-28-Francisco Bruno Pereira Santos-Ministério de Publicações e Espírito de Profecia.jpeg"}, {"seq": 29, "name": "Marcos Alberto Bandeira Pinto", "role": "Relações Públicas e Liberdade Religiosa", "image": "assets/29-29-Marcos Alberto Bandeira Pinto-Relações Públicas e Liberdade Religiosa.jpeg"}, {"seq": 30, "name": "Yula Albuquerque Rodrigues", "role": "Adolescentes e Pré-Adolescentes", "image": "assets/30-30-Yula Albuquerque Rodrigues-Adolescentes e Pré-Adolescentes.jpeg"}, {"seq": 31, "name": "Maria Selma Costa Castro Barroso", "role": "Ministério de Recepção", "image": "assets/31-31-Maria Selma Costa Castro Barroso-Ministério de Recepção.jpeg"}];
+
 const list = document.getElementById('people');
 const search = document.getElementById('search');
 const count = document.getElementById('count');
 const empty = document.getElementById('empty');
 const modal = document.getElementById('personModal');
 const stage = document.getElementById('modalStage');
+
+/* Lock / password logic */
+const PASSWORD = 'Central@2027';
+const lockArea = document.getElementById('lockArea');
+const listContent = document.getElementById('listContent');
+const pwBackdrop = document.getElementById('pwBackdrop');
+const pwForm = document.getElementById('pwForm');
+const pwInput = document.getElementById('pwInput');
+const pwError = document.getElementById('pwError');
+const pwSubmit = document.getElementById('pwSubmit');
+let listRendered = false;
+
+function openPasswordModal() {
+  pwBackdrop.classList.add('open');
+  pwBackdrop.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
+  pwError.classList.remove('visible');
+  pwInput.value = '';
+  setTimeout(() => pwInput.focus(), 120);
+}
+
+function closePasswordModal() {
+  pwBackdrop.classList.remove('open');
+  pwBackdrop.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('modal-open');
+}
+
+function unlockList() {
+  lockArea.classList.remove('visible');
+  lockArea.hidden = true;
+  listContent.hidden = false;
+  if (!listRendered) {
+    render();
+    listRendered = true;
+  }
+  closePasswordModal();
+}
+
+document.getElementById('openPassword').addEventListener('click', openPasswordModal);
+document.getElementById('pwClose').addEventListener('click', closePasswordModal);
+document.getElementById('pwCancel').addEventListener('click', closePasswordModal);
+pwBackdrop.addEventListener('click', e => { if (e.target === pwBackdrop) closePasswordModal(); });
+
+pwForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const value = pwInput.value;
+  pwSubmit.disabled = true;
+  // small delay so the "checking" state is perceived, then validate
+  setTimeout(() => {
+    if (value === PASSWORD) {
+      pwSubmit.disabled = false;
+      unlockList();
+    } else {
+      pwSubmit.disabled = false;
+      pwError.classList.add('visible');
+      pwInput.value = '';
+      pwInput.focus();
+    }
+  }, 250);
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && pwBackdrop.classList.contains('open')) closePasswordModal();
+});
+
+/* People list & modal logic */
 let visiblePeople = [...people];
 let currentIndex = 0;
 let changeTimer;
@@ -257,6 +398,7 @@ function closeModal() {
  document.body.classList.remove('modal-open');
 }
 function escapeHtml(s) { return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
 list.addEventListener('click', event => { const card = event.target.closest('.person'); if (card) showPerson(Number(card.dataset.index)); });
 document.getElementById('modalPrev').addEventListener('click', () => showPerson(currentIndex - 1, true));
 document.getElementById('modalNext').addEventListener('click', () => showPerson(currentIndex + 1, true));
@@ -271,7 +413,7 @@ document.addEventListener('keydown', event => {
 search.addEventListener('input', render);
 document.getElementById('clear').addEventListener('click', () => {search.value='';render();search.focus();});
 document.getElementById('print').addEventListener('click', () => window.print());
-render();
 </script>
 </body>
 </html>
+```
